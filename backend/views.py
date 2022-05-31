@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.shortcuts import HttpResponse, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,13 +5,12 @@ from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
 from .models import Post, Like
 from .serializer import PostSerializer, LikeSerializer
 from .service import *
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 
 def logout_user(request):
@@ -36,7 +34,7 @@ def redirect_to_main(request):
     return redirect('main')
 
 
-class PostView(LoginRequiredMixin, ListAPIView):
+class PostView(ListAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
@@ -63,8 +61,7 @@ class LikeView(LoginRequiredMixin, ListAPIView):
     #     return queryset
 
 
-class Analytics(LoginRequiredMixin, APIView):
-    renderer_classes = [JSONRenderer]
+class Analytics(LoginRequiredMixin, ListAPIView):
 
     def get(self, request, pk, format=None):
         date_from_str = self.request.query_params.get("date_from")
@@ -72,8 +69,10 @@ class Analytics(LoginRequiredMixin, APIView):
         date_from, date_to = convert_str_to_date(date_from_str, date_to_str)
 
         the_post = Post.objects.all()[int(pk)-1]
-        like_dict = return_date_like_dict(the_post, date_from, date_to)
-        return Response(like_dict)
+        like_dict = return_date_like_json(the_post, date_from, date_to)
+        like_json = json.dumps(like_dict)
+        loaded_like = json.loads(like_json)
+        return Response(loaded_like)
 
 
 class PutLike(LoginRequiredMixin, CreateAPIView):

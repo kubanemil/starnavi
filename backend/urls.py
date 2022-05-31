@@ -1,6 +1,9 @@
 from django.urls import path, re_path, include
 from . import views
-import django.contrib.auth.urls
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('main/', views.main, name='main'),
@@ -14,4 +17,6 @@ urlpatterns = [
     path("likes/", views.LikeView.as_view(), name='like_view'),
     path("put_like/", views.PutLike.as_view(), name='put_like'),
     path("analytics/<pk>/", views.Analytics.as_view()),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

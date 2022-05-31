@@ -1,5 +1,5 @@
 import datetime
-import pytz
+import json
 
 class ListAsQuerySet(list):
 
@@ -43,7 +43,7 @@ def convert_str_to_date(date_from_str, date_to_str):
     return start_date, end_date
 
 
-def return_date_like_dict(the_post, date_from, date_to):
+def return_date_like_json(the_post, date_from, date_to):
     post_likes = the_post.likes.all()  #Get all likes for given post
     dates = []
     for like in post_likes:
@@ -67,8 +67,9 @@ def return_date_like_dict(the_post, date_from, date_to):
         date = str(likes_by_day[0])
         like_amount = likes_by_day[1]
         date_likes_dict[date] = like_amount
-    print(date_likes_dict)
-    return date_likes_dict
+    like_json = json.dumps(date_likes_dict)
+    loaded_like_json = json.loads(like_json)
+    return loaded_like_json
 
 # start_date_likes_amount = 0
 #         for i in range(len(dates)): #every dateobject is one like
