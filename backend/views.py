@@ -10,6 +10,7 @@ from .models import Post, Like
 from .serializer import PostSerializer, LikeSerializer
 from .service import *
 from rest_framework.response import Response
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 
 
 
@@ -35,6 +36,7 @@ def redirect_to_main(request):
 
 
 class PostView(ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
