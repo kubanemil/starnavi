@@ -4,6 +4,11 @@ from ckeditor.fields import RichTextField
 import datetime
 # Create your models here.
 
+class UserActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    request = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(default=datetime.datetime.now)
+
 
 class Post(models.Model):
     title = models.CharField(max_length=100)

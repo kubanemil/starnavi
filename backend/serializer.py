@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Like
+from .models import Post, Like, UserActivity
 from datetime import datetime
 
 class PostSerializer(serializers.ModelSerializer):
@@ -12,4 +12,11 @@ class PostSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
+        fields = '__all__'
+
+
+class UserActivitySerializer(serializers.ModelSerializer):
+    user = serializers.CharField()
+    class Meta:
+        model = UserActivity
         fields = '__all__'

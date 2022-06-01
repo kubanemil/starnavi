@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
-from .models import Post, Like
-from .serializer import PostSerializer, LikeSerializer
+from .models import Post, Like, UserActivity
+from .serializer import PostSerializer, LikeSerializer, UserActivitySerializer
 from .service import *
 from rest_framework.response import Response
 
@@ -83,7 +83,9 @@ class UpdateRetrievePost(LoginRequiredMixin, RetrieveUpdateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-
+class UserActivityView(LoginRequiredMixin, ListAPIView):
+    serializer_class = UserActivitySerializer
+    queryset = UserActivity.objects.all()
 
 
 # class TestList(ListAPIView):
