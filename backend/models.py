@@ -10,6 +10,9 @@ class UserActivity(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now)
 
 
+class Emil(models.Model):
+    name = models.CharField(default="EMIL", max_length=10)
+
 class Post(models.Model):
     title = models.CharField(max_length=100)
     text = RichTextField()
@@ -32,4 +35,6 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
     timestamp = models.DateField(default=datetime.date.today)
 
-
+class UserActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(default=datetime.datetime.now)
