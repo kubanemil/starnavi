@@ -69,7 +69,7 @@ def return_date_like_json(the_post, date_from, date_to):
         date_likes_dict[date] = like_amount
     like_json = json.dumps(date_likes_dict)
     loaded_like_json = json.loads(like_json)
-    return loaded_like_json
+    return like_json
 
 # start_date_likes_amount = 0
 #         for i in range(len(dates)): #every dateobject is one like

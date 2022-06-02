@@ -7,7 +7,8 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('main/', views.main, name='main'),
-    path('accounts/', include('django.contrib.auth.urls'), name="login"),
+    # path('accounts/', include('django.contrib.auth.urls'), name="login"),
+    path('login/', views.APILoginView.as_view(), name='login'),
     path("signup/", views.SignUp.as_view(), name='signup'),
     path("accounts/profile/", views.redirect_to_main),
     path("logout/", views.logout_user),

@@ -4,14 +4,6 @@ from ckeditor.fields import RichTextField
 import datetime
 # Create your models here.
 
-class UserActivity(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    request = models.CharField(max_length=100)
-    timestamp = models.DateTimeField(default=datetime.datetime.now)
-
-
-class Emil(models.Model):
-    name = models.CharField(default="EMIL", max_length=10)
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -35,6 +27,8 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
     timestamp = models.DateField(default=datetime.date.today)
 
+
 class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    request = models.CharField(max_length=200, default="GET None")
     timestamp = models.DateTimeField(default=datetime.datetime.now)

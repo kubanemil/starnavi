@@ -9,9 +9,14 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAP
 from .models import Post, Like, UserActivity
 from .serializer import PostSerializer, LikeSerializer, UserActivitySerializer
 from .service import *
+from rest_framework.permissions import IsAuthenticated
+from django.conf import settings
+from django.middleware import csrf
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
-
+from django.contrib.auth import authenticate
+from rest_framework import status
 
 
 def logout_user(request):
@@ -49,19 +54,6 @@ class LikeView(LoginRequiredMixin, ListAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
 
-    # def get_queryset(self):
-    #     date_from_str = self.request.query_params.get("date_from")
-    #     date_to_str = self.request.query_params.get("date_to")
-    #     date_from, date_to = convert_str_to_date(date_from_str, date_to_str)
-    #     date_list = []
-    #     for query in Like.objects.all():
-    #         year, month, day = query.timestamp.year, query.timestamp.month, query.timestamp.day
-    #         query_date = datetime(year, month, day)
-    #         if date_from <= query_date <= date_to:
-    #             date_list.append(query)
-    #     queryset = ListAsQuerySet(date_list, model=Like)
-    #     return queryset
-
 
 class Analytics(LoginRequiredMixin, ListAPIView):
 
@@ -90,32 +82,36 @@ class UserActivityView(LoginRequiredMixin, ListAPIView):
     queryset = UserActivity.objects.all()
 
 
-# class TestList(ListAPIView):
-#     serializer_class = TestSerializer
+# def get_tokens_for_user(user):
+#     refresh = RefreshToken.for_user(user)
+#     return {
+#         'refresh': str(refresh),
+#         'access': str(refresh.access_token),
+#     }
 #
-#     def get_queryset(self):
-#         queryset = TestModel.objects.all()
-#         date_from = self.request.query_params.get("date_from")
-#         date_to = self.request.query_params.get("date_to")
-#         if date_from is not None and date_to is not None:
-#             date_from = date_from.split("-")
-#             date_from_list = str_list_int(date_from)
-#             date_to = date_to.split("-")
-#             date_to_list = str_list_int(date_to)
-#
-#         print(date_from_list, date_to_list)
-#         if date_from is not None and date_to is not None:
-#             print("!"*10)
-#             date_list = []
-#             for query in TestModel.objects.all():
-#                 print(query.timestamp.day)
-#                 year, month, day = query.timestamp.year, query.timestamp.month, query.timestamp.day
-#                 # print(type(query.timestamp.year), type(datetime(2022, 2, 2)))
-#                 if datetime(date_from_list[0], date_from_list[1], date_from_list[2]) \
-#                         < datetime(year, month, day) \
-#                         < datetime(date_to_list[0], date_to_list[1], date_to_list[2]):
-#                     date_list.append(query)
-#             queryset = ListAsQuerySet(date_list, model=TestModel)
-#             print(queryset)
-#         return queryset
-
+# from rest_framework_simplejwt.views import TokenObtainPairView
+# class APILoginView(TokenObtainPairView):
+#     def post(self, request, format=None):
+#         data = request.data
+#         response = Response()
+#         username = data.get('username', None)
+#         password = data.get('password', None)
+#         user = authenticate(username=username, password=password)
+#         if user is not None:
+#             if user.is_active:
+#                 data = get_tokens_for_user(user)
+#                 response.set_cookie(
+#                     key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+#                     value=data["access"],
+#                     expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+#                     secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+#                     httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+#                     samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+#                 )
+#                 csrf.get_token(request)
+#                 response.data = {"Success": "Login successfully", "data": data}
+#                 return response
+#             else:
+#                 return Response({"No active": "This account is not active!!"}, status=status.HTTP_404_NOT_FOUND)
+#         else:
+#             return Response({"Invalid": "Invalid username or password!!"}, status=status.HTTP_404_NOT_FOUND)

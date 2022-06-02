@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Like, UserActivity
+from .models import Post, Like, UserActivity, User
 from datetime import datetime
 
 class PostSerializer(serializers.ModelSerializer):
