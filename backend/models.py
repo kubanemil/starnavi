@@ -11,6 +11,7 @@ class Post(models.Model):
     timestamp = models.DateField(default=datetime.date.today)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+
     def __str__(self):
         return self.title
 
@@ -25,6 +26,7 @@ class Post(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    # liked = models.BooleanField(default=False)
     timestamp = models.DateField(default=datetime.date.today)
 
 
