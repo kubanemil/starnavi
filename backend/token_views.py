@@ -6,7 +6,8 @@ from rest_framework import status
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from django.middleware import csrf
 from django.conf import settings
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
+from rest_framework.response import Response
 
 
 class LoginApiView(TokenObtainPairView):
@@ -19,6 +20,7 @@ class LoginApiView(TokenObtainPairView):
         user = authenticate(username=request.data['username'], password=request.data['password'])
         if user is not None:
             if user.is_active:
+                login(request, user)
                 response = Response(serializer.validated_data, status=status.HTTP_200_OK)
                 response.set_cookie(
                     key=settings.SIMPLE_JWT['AUTH_COOKIE'],

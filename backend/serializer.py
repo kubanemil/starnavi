@@ -6,14 +6,24 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'text', 'timestamp', 'user', 'like_amount']
+        fields = ['id', 'title', 'text', 'date', 'user', 'like_amount']
 
 
-class LikeSerializer(serializers.ModelSerializer):
+class LikeSerializerModify(serializers.ModelSerializer):
+    date = serializers.DateField(write_only=True)
+
     class Meta:
         model = Like
         fields = '__all__'
 
+
+class LikeSerializerView(serializers.ModelSerializer):
+    user = serializers.CharField()
+    post = serializers.CharField()
+
+    class Meta:
+        model = Like
+        fields = ['user', 'post', 'liked']
 
 class UserActivitySerializer(serializers.ModelSerializer):
     user = serializers.CharField()

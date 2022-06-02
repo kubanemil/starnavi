@@ -47,7 +47,7 @@ def return_date_like_json(the_post, date_from, date_to):
     post_likes = the_post.likes.all()  #Get all likes for given post
     dates = []
     for like in post_likes:
-        date = like.timestamp
+        date = like.date
         dates.append(date)
     dates = sorted(dates)
     likes_by_day_list = []
@@ -69,21 +69,5 @@ def return_date_like_json(the_post, date_from, date_to):
         date_likes_dict[date] = like_amount
     like_json = json.dumps(date_likes_dict)
     loaded_like_json = json.loads(like_json)
-    return like_json
+    return loaded_like_json
 
-# start_date_likes_amount = 0
-#         for i in range(len(dates)): #every dateobject is one like
-#             the_date = datetime.date(dates[i].year, dates[i].month, dates[i].day)
-#             if the_date.year == start_date.year and the_date.month == start_date.month \
-#                     and the_date.day == start_date.day:
-#                 if date_from <= the_date <= date_to:
-#                     start_date_likes_amount += 1
-#             else:
-#                 day_likes = [start_date, start_date_likes_amount]
-#                 likes_by_day_list.append(day_likes)
-#                 print("likes_by_day_list:")
-#                 print(likes_by_day_list)
-#                 start_date = dates[i]
-#                 start_date_likes_amount = 0
-#         day_likes = [start_date, start_date_likes_amount]
-#         likes_by_day_list.append(day_likes)

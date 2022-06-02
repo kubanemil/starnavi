@@ -8,7 +8,7 @@ import datetime
 class Post(models.Model):
     title = models.CharField(max_length=100)
     text = RichTextField()
-    timestamp = models.DateField(default=datetime.date.today)
+    date = models.DateField(default=datetime.date.today)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
@@ -27,10 +27,15 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
     liked = models.BooleanField(default=False)
-    timestamp = models.DateField(default=datetime.date.today)
+    date = models.DateField(default=datetime.date.today)
 
+    def __str__(self):
+        return self.user.username + " - " + self.post.title
 
 class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    request = models.CharField(max_length=200, default="GET None")
+    request = models.CharField(max_length=200, default="GET 'None'")
     timestamp = models.DateTimeField(default=datetime.datetime.now)
+
+    def __str__(self):
+        return self.user.username + " - " + str(self.timestamp)
