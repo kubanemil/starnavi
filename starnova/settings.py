@@ -110,10 +110,10 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-  'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+  'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
   'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
-  'ROTATE_REFRESH_TOKENS': True,
-  'BLACKLIST_AFTER_ROTATION': True,
+  'ROTATE_REFRESH_TOKENS': False,
+  'BLACKLIST_AFTER_ROTATION': False,
   'UPDATE_LAST_LOGIN': True,
 
   'ALGORITHM': 'HS256',
@@ -164,7 +164,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# LOGIN_URL = 'login/'
+LOGIN_URL = 'login/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
