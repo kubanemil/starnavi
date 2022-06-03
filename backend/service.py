@@ -1,5 +1,8 @@
 import datetime
 import json
+from .models import Post, Like, UserActivity, User
+from rest_framework.response import Response
+
 
 class ListAsQuerySet(list):
 
@@ -67,7 +70,28 @@ def return_date_like_json(the_post, date_from, date_to):
         date = str(likes_by_day[0])
         like_amount = likes_by_day[1]
         date_likes_dict[date] = like_amount
-    like_json = json.dumps(date_likes_dict)
+    the_dict = {
+        "post_id": the_post.id,
+        "post_title": the_post.title,
+        "like_analytics_by_date": date_likes_dict
+    }
+    like_json = json.dumps(the_dict)
     loaded_like_json = json.loads(like_json)
     return loaded_like_json
+
+
+def return_an_like_instances(user_id, post_id):
+    if user_id is not None and post_id is not None:
+        user = User.objects.get(id=user_id)
+        post = Post.objects.get(id=post_id)
+        instances = Like.objects.filter(post=post, liker=user)
+    elif user_id is None and post_id is not None:
+        post = Post.objects.get(id=post_id)
+        instances = Like.objects.filter(post=post)
+    elif user_id is not None and post_id is None:
+        user = User.objects.get(id=user_id)
+        instances = Like.objects.filter(liker=user)
+    else:
+        instances = [Like.objects.first(), ]
+    return instances
 

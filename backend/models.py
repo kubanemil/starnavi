@@ -11,7 +11,6 @@ class Post(models.Model):
     date = models.DateField(default=datetime.date.today)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
     def __str__(self):
         return self.title
 
@@ -24,15 +23,15 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
-    liked = models.BooleanField(default=False)
+    liker = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.date.today)
 
-    def __str__(self):
-        return self.user.username + " - " + self.post.title
     class Meta:
-        unique_together = ('user', 'post')
+        unique_together = ('post', 'liker')
+
+    def __str__(self):
+        return self.liker.username + " - " + self.post.title
 
 class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

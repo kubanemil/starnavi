@@ -1,11 +1,8 @@
-from django.shortcuts import redirect
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
-from .models import Post, Like, UserActivity, User
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 from .serializer import PostSerializer, LikeSerializerView,\
-                            LikeSerializerModify, UserActivitySerializer, LikeSerializerCreate
+                        UserActivitySerializer, LikeSerializerCreate
 from .service import *
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 
 class PostView(ListAPIView):
@@ -25,12 +22,6 @@ class CreatePost(CreateAPIView):
         return Response(serializer.data)
 
 
-class UpdateRetrievePost(RetrieveUpdateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
-
-
 class LikeView(ListAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializerView
@@ -40,31 +31,22 @@ class LikeView(ListAPIView):
 class PutLike(CreateAPIView):
     serializer_class = LikeSerializerCreate
     permission_classes = [IsAuthenticated]
-    # def post(self, request, *args, **kwargs):
-    #     try:
-    #         self.create(request, *args, **kwargs)
-    #     except:
-    #         return redirect('update_like', pk=1)
 
 
-
-class UpdateLike(RetrieveUpdateAPIView):
+class RemoveLike(RetrieveDestroyAPIView):
     queryset = Like.objects.all()
-    serializer_class = LikeSerializerModify
+    serializer_class = LikeSerializerCreate
     permission_classes = [IsAuthenticated]
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
-
+    def retrieve(self, request, *args, **kwargs):
+        user_id = self.request.query_params.get("user_id")
+        post_id = self.request.query_params.get("post_id")
+        instances = return_an_like_instances(user_id=user_id, post_id=post_id)
+        if len(instances) >= 1:
+            instance = instances[0]
+        else:
+            return Response({"error": "No matching instance with such parameters"})
+        serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
 
@@ -83,10 +65,8 @@ class Analytics(ListAPIView):
         date_from, date_to = convert_str_to_date(date_from_str, date_to_str)
 
         the_post = Post.objects.all()[int(pk)-1]
-        like_dict = return_date_like_json(the_post, date_from, date_to)
-        like_json = json.dumps(like_dict)
-        loaded_like = json.loads(like_json)
-        return Response(loaded_like)
+        like_json = return_date_like_json(the_post, date_from, date_to)
+        return Response(like_json)
 
 
 
