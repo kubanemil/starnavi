@@ -1,9 +1,10 @@
 from django.utils import timezone
-import time
 from .models import UserActivity
 
 
 class AccountLoginMiddleware:
+    """Middleware to monitor each user's request and add them to database.
+    Constantly deletes old requests, and saves only last 5 requests for every user."""
     def __init__(self, get_response):
         self.get_response = get_response
 

@@ -3,7 +3,9 @@ from django.conf import settings
 
 
 class CustomAuthentication(JWTAuthentication):
+    """Custom Token Authentication for JWT"""
     def authenticate(self, request):
+        """Takes JWT Access Token from cookies."""
         header = self.get_header(request)
         if header is None:
             raw_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) or None

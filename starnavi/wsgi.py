@@ -1,5 +1,5 @@
 """
-WSGI config for starnova project.
+WSGI config for starnavi project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'starnova.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'starnavi.settings')
 
 application = get_wsgi_application()

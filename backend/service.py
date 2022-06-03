@@ -1,11 +1,10 @@
 import datetime
 import json
 from .models import Post, Like, UserActivity, User
-from rest_framework.response import Response
 
 
 class ListAsQuerySet(list):
-
+    """Class to convert list of instances into QuerySet object."""
     def __init__(self, *args, model, **kwargs):
         self.model = model
         super().__init__(*args, **kwargs)
@@ -17,17 +16,21 @@ class ListAsQuerySet(list):
         return self
 
 def str_list_int(list):
+    """Function to convert list of string into list of integers."""
     int_list = []
-    for l in list:
+    for element in list:
         try:
-            l = int(l)
-            int_list.append(l)
-        except:
+            element = int(element)
+            int_list.append(element)
+        except ValueError:
             pass
     return int_list
 
 
 def convert_str_to_date(date_from_str, date_to_str):
+    """Function to convert string date into date object.
+    Example:
+        '2020-12-31' ==>> datetime.date(2020, 12, 31) """
     date_from_list = date_to_list = []
     if date_from_str is not None or date_to_str is not None:
         date_from_str = date_from_str.split("-")
@@ -47,6 +50,7 @@ def convert_str_to_date(date_from_str, date_to_str):
 
 
 def return_date_like_json(the_post, date_from, date_to):
+    """Converts date object into jsonified object."""
     post_likes = the_post.likes.all()  #Get all likes for given post
     dates = []
     for like in post_likes:
@@ -81,6 +85,8 @@ def return_date_like_json(the_post, date_from, date_to):
 
 
 def return_an_like_instances(user_id, post_id):
+    """Checks the user_id and post_id variables, and if they valid
+    returns the correct instance of Like model."""
     if user_id is not None and post_id is not None:
         user = User.objects.get(id=user_id)
         post = Post.objects.get(id=post_id)

@@ -1,3 +1,4 @@
+"""Authentication and authorization views."""
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -17,21 +18,26 @@ from django.views.generic.edit import CreateView
 
 
 def main(request):
+    """Redirects to Swagger documentation of the API"""
     return redirect('swagger/')
 
 
 def logout_user(request):
+    """Logs user out."""
     logout(request)
     return HttpResponse("Successfully Logged Out.")
 
 
 class SignUp(CreateView):
+    """View to sign user up."""
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
 
 class LoginApi(TokenObtainPairView):
+    """Login View that will also sets
+     access_token and refresh_token as a COOKIES."""
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
@@ -62,6 +68,9 @@ class LoginApi(TokenObtainPairView):
 
 
 class RefreshApi(TokenRefreshView):
+    """View to get new Access Token with Refresh Token.
+    You should send POST request without refresh_token.
+    Refresh Token will be taken from COOKIES."""
     def post(self, request, *args, **kwargs):
 
         serializer = self.get_serializer(data=
