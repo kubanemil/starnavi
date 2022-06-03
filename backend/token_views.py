@@ -8,9 +8,30 @@ from django.middleware import csrf
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
+from django.shortcuts import redirect
+from django.shortcuts import HttpResponse
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
 
 
-class LoginApiView(TokenObtainPairView):
+def main(request):
+    return redirect('swagger/')
+
+
+def logout_user(request):
+    logout(request)
+    return HttpResponse("Successfully Logged Out.")
+
+
+class SignUp(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
+
+
+class LoginApi(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:

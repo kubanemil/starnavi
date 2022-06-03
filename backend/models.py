@@ -31,6 +31,8 @@ class Like(models.Model):
 
     def __str__(self):
         return self.user.username + " - " + self.post.title
+    class Meta:
+        unique_together = ('user', 'post')
 
 class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
